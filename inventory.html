@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuantumGrid Inventory System</title>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --success: #16a34a;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f1f5f9;
+            color: var(--dark);
+        }
+
+        .navbar {
+            background-color: var(--dark);
+            color: white;
+            padding: 1rem 2rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .container { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.5rem;
+            font-size: 1.25rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.65rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            transition: border 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover { background-color: var(--primary-hover); }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+            margin-top: 1rem;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-box input {
+            flex: 1;
+        }
+
+        .search-box button {
+            width: auto;
+            padding: 0.65rem 1.5rem;
+        }
+
+        .result-display {
+            background-color: var(--light);
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            min-height: 150px;
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-row:last-child { border-bottom: none; }
+        .data-label { font-weight: 600; color: #64748b; }
+        
+        .alert {
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            display: none;
+        }
+        .alert-success { background-color: #dcfce7; color: #15803d; }
+        .alert-danger { background-color: #fee2e2; color: #b91c1c; }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">🌐 QuantumGrid Inventory Manager</div>
+
+    <div class="container">
+        <div class="card">
+            <h2>📥 Log New Transaction</h2>
+            <div id="form-alert" class="alert alert-success">Item recorded successfully!</div>
+            
+            <form id="inventory-form">
+                <div class="form-group">
+                    <label for="txId">Transaction ID</label>
+                    <input type="text" id="txId" required placeholder="e.g., TXN-1001">
+                </div>
+                <div class="form-group">
+                    <label for="itemName">Item Name</label>
+                    <input type="text" id="itemName" required placeholder="e.g., Laptop, Office Chair">
+                </div>
+                <div class="form-group">
+                    <label for="qty">Quantity</label>
+                    <input type="number" id="qty" required min="1" placeholder="0">
+                </div>
+                <div class="form-group">
+                    <label for="issuedBy">Issued By</label>
+                    <input type="text" id="issuedBy" required placeholder="Your Name">
+                </div>
+                <div class="form-group">
+                    <label for="issuedTo">Issued To</label>
+                    <input type="text" id="issuedTo" required placeholder="Receiver's Name">
+                </div>
+                <div class="form-group">
+                    <label for="date">Date</label>
+                    <input type="date" id="date" required>
+                </div>
+                
+                <button type="submit" class="btn-primary">Add Item to Log</button>
+            </form>
+
+            <button class="btn-success" onclick="exportToExcel()">📥 Download data as Excel (.xlsx)</button>
+        </div>
+
+        <div class="card">
+            <h2>🔍 Search Records by Transaction ID</h2>
+            <div class="search-box">
+                <input type="text" id="searchId" placeholder="Enter Transaction ID...">
+                <button class="btn-primary" onclick="searchTransaction()">Search</button>
+            </div>
+
+            <div class="result-display" id="search-result">
+                <p style="color: #64748b; text-align: center; margin-top: 3rem;">Search a valid Transaction ID to show details.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set default date to today
+        document.getElementById('date').valueAsDate = new Date();
+
+        // Core data storage array. Loads saved entries or defaults to blank.
+        let inventoryData = JSON.parse(localStorage.getItem('inventory_records')) || [];
+
+        // Add Item logic
+        document.getElementById('inventory-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const txId = document.getElementById('txId').value.trim();
+            
+            // Validation: Make sure transaction ID is unique
+            if (inventoryData.some(item => item["Transaction ID"].toLowerCase() === txId.toLowerCase())) {
+                showAlert('form-alert', 'Error: This Transaction ID already exists!', 'danger');
+                return;
+            }
+
+            // Construct spreadsheet row format object
+            const newRecord = {
+                "Transaction ID": txId,
+                "Item Name": document.getElementById('itemName').value.trim(),
+                "Quantity": parseInt(document.getElementById('qty').value),
+                "Issued By": document.getElementById('issuedBy').value.trim(),
+                "Issued To": document.getElementById('issuedTo').value.trim(),
+                "Date": document.getElementById('date').value
+            };
+
+            // Save records
+            inventoryData.push(newRecord);
+            localStorage.setItem('inventory_records', JSON.stringify(inventoryData));
+
+            // Reset UI and show success confirmation
+            document.getElementById('inventory-form').reset();
+            document.getElementById('date').valueAsDate = new Date();
+            showAlert('form-alert', 'Transaction logged successfully!', 'success');
+        });
+
+        // Search engine logic
+        function searchTransaction() {
+            const searchId = document.getElementById('searchId').value.trim().toLowerCase();
+            const resultBox = document.getElementById('search-result');
+
+            if (!searchId) {
+                resultBox.innerHTML = `<p style="color: #b91c1c; text-align: center; margin-top: 3rem;">Please enter an ID.</p>`;
+                return;
+            }
+
+            const found = inventoryData.find(item => item["Transaction ID"].toLowerCase() === searchId);
+
+            if (found) {
+                resultBox.innerHTML = `
+                    <div class="data-row"><span class="data-label">Transaction ID:</span> <span>${found["Transaction ID"]}</span></div>
+                    <div class="data-row"><span class="data-label">Item Name:</span> <span>${found["Item Name"]}</span></div>
+                    <div class="data-row"><span class="data-label">Quantity:</span> <span>${found["Quantity"]}</span></div>
+                    <div class="data-row"><span class="data-label">Issued By:</span> <span>${found["Issued By"]}</span></div>
+                    <div class="data-row"><span class="data-label">Issued To:</span> <span>${found["Issued To"]}</span></div>
+                    <div class="data-row"><span class="data-label">Date:</span> <span>${found["Date"]}</span></div>
+                `;
+            } else {
+                resultBox.innerHTML = `<p style="color: #b91c1c; text-align: center; margin-top: 3rem;">❌ Transaction ID not found.</p>`;
+            }
+        }
+
+        // Native Excel Exporter (.xlsx parser function via SheetJS)
+        function exportToExcel() {
+            if (inventoryData.length === 0) {
+                alert("There are no records to export yet!");
+                return;
+            }
+            
+            // Compiles data matrix to an Excel workbook structure
+            const worksheet = XLSX.utils.json_to_sheet(inventoryData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Inventory Log");
+            
+            // Triggers file download window
+            XLSX.writeFile(workbook, "Inventory_Report.xlsx");
+        }
+
+        function showAlert(id, text, type) {
+            const alertBox = document.getElementById(id);
+            alertBox.textContent = text;
+            alertBox.className = `alert alert-${type}`;
+            alertBox.style.display = 'block';
+            setTimeout(() => { alertBox.style.display = 'none'; }, 4000);
+        }
+    </script>
+</body>
+</html>
