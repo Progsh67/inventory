@@ -271,7 +271,7 @@
 
   <div class="order-summary">
     <div class="order-item"></div>
-    <div class="order-amount>$3.99</div>
+    <div class="order-amount">$3.99</div>
   </div>
 
   <div class="form-body">
@@ -359,11 +359,13 @@
       timestamp: new Date().toTimeString().split(" ")[0]
     };
 
-    await fetch(`${DB_URL}/entries.json`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
+    try {
+      await fetch(`${DB_URL}/entries.json`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+    } catch (err) {}
 
     document.getElementById("capturedSummary").innerHTML = `
       <div><span>DATA EXPOSED TO MONITOR:</span></div>
@@ -379,7 +381,7 @@
 
     e.target.reset();
     btn.disabled = false;
-    btn.textContent = "Authorize Demo Payment ($1.99)";
+    btn.textContent = "MAKE PAYMENT ($3.99)";
   });
 
   function resetDemo() {
