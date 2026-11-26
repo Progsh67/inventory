@@ -3,88 +3,187 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CARD DETAILS FOR AWARENESS TRAINING </title>
+<title>Express Checkout</title>
 <style>
   :root {
-    --bg: #08080a;
-    --card: #120d0f;
+    --bg: #f3f5f8;
+    --card: #ffffff;
+    --primary: #1a56db;
+    --primary-hover: #1e429f;
+    --text: #111827;
+    --muted: #6b7280;
+    --border: #d1d5db;
     --red: #ff1e38;
-    --border: rgba(255, 30, 56, 0.45);
-    --text: #f4f4f6;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'Courier New', Courier, monospace;
-    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    padding: 16px;
   }
-  .container {
+
+  /* Clear Training Disclaimer Bar */
+  .sim-notice {
+    width: 100%;
+    max-width: 420px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 14px;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  /* Checkout Card */
+  .checkout-card {
     width: 100%;
     max-width: 420px;
     background: var(--card);
-    border: 1px solid var(--border);
-    border-top: 4px solid var(--red);
-    padding: 24px;
-    box-shadow: 0 0 30px rgba(255, 30, 56, 0.2);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
   }
-  .warning-banner {
-    background: rgba(255, 30, 56, 0.15);
-    border: 1px solid var(--red);
-    color: var(--red);
-    padding: 12px;
-    font-size: 0.8rem;
-    font-weight: bold;
+  .checkout-header {
+    background: #f9fafb;
+    padding: 18px 20px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .merchant-name {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--text);
+  }
+  .merchant-sub {
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  .secure-pill {
+    background: #ecfdf5;
+    color: #065f46;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid #a7f3d0;
+  }
+
+  /* Order Summary Strip */
+  .order-summary {
+    padding: 16px 20px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .order-item {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .order-amount {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  /* Form Body */
+  .form-body {
+    padding: 20px;
+  }
+  .method-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .tab {
+    padding: 10px;
     text-align: center;
-    margin-bottom: 20px;
-    letter-spacing: 0.5px;
-    line-height: 1.45;
+    font-size: 0.82rem;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    background: #fff;
   }
-  h1 { font-size: 1.2rem; margin-bottom: 8px; letter-spacing: 1px; }
-  p.sub { font-size: 0.82rem; color: #9a9aa6; margin-bottom: 22px; line-height: 1.4; }
+  .tab.active {
+    border-color: var(--primary);
+    background: #eff6ff;
+    color: var(--primary);
+  }
+
+  .field-group {
+    margin-bottom: 15px;
+  }
   label {
     display: block;
-    font-size: 0.78rem;
-    color: var(--red);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #374151;
     margin-bottom: 6px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
   }
   input {
     width: 100%;
-    background: #070709;
+    padding: 11px 12px;
     border: 1px solid var(--border);
-    color: #fff;
-    padding: 12px;
-    font-family: inherit;
-    font-size: 1rem;
-    margin-bottom: 18px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: var(--text);
+    background: #fff;
     outline: none;
+    transition: border-color 0.15s;
   }
-  input:focus { border-color: var(--red); box-shadow: 0 0 8px rgba(255, 30, 56, 0.4); }
-  button {
-    width: 100%;
-    background: var(--red);
-    color: #fff;
-    border: none;
-    padding: 14px;
-    font-family: inherit;
-    font-size: 1rem;
-    font-weight: bold;
-    letter-spacing: 1.5px;
-    cursor: pointer;
+  input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.15);
+  }
+  .row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
   }
 
-  /* Full-Screen Scammed Alert Overlay */
+  .pay-btn {
+    width: 100%;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 13px;
+    border-radius: 8px;
+    font-size: 0.98rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 6px;
+  }
+  .pay-btn:hover { background: var(--primary-hover); }
+  .footer-trust {
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 14px;
+  }
+
+  /* Full-Screen Scammed Reveal Overlay */
   .scam-overlay {
     display: none;
     position: fixed;
     inset: 0;
     background: #090204;
+    color: #f4f4f6;
+    font-family: 'Courier New', Courier, monospace;
     z-index: 9999;
     padding: 24px;
     flex-direction: column;
@@ -99,24 +198,18 @@
     to   { box-shadow: inset 0 0 70px rgba(255, 30, 56, 0.85); border-color: #ff6b7d; }
   }
   .alert-icon {
-    font-size: 3.5rem;
+    font-size: 3.2rem;
     color: var(--red);
     font-weight: bold;
     margin-bottom: 10px;
-    animation: blink 0.8s infinite;
-  }
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.25; }
   }
   .scam-title {
-    font-size: 2.2rem;
+    font-size: 2.1rem;
     font-weight: bold;
     color: var(--red);
     letter-spacing: 2px;
     line-height: 1.15;
     margin-bottom: 14px;
-    text-transform: uppercase;
   }
   .sim-tag {
     background: var(--red);
@@ -135,7 +228,7 @@
     padding: 16px;
     text-align: left;
     margin-bottom: 20px;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     line-height: 1.6;
   }
   .captured-box span {
@@ -144,10 +237,10 @@
   }
   .lesson-text {
     max-width: 400px;
-    font-size: 0.88rem;
+    font-size: 0.86rem;
     color: #d4d4dc;
     line-height: 1.5;
-    margin-bottom: 24px;
+    margin-bottom: 22px;
   }
   .reset-btn {
     max-width: 260px;
@@ -155,31 +248,67 @@
     border: 1px solid var(--red);
     color: var(--red);
     padding: 10px 16px;
+    font-family: inherit;
     font-size: 0.85rem;
+    cursor: pointer;
   }
 </style>
 </head>
 <body>
 
-<div class="container" id="formContainer">
-  <div class="warning-banner">
-    [!] TRAINING PURPOSE ONLY — DO NOT KEY IN ACTUAL PERSONAL OR REAL DATA [!]
+<div class="sim-notice" id="topNotice">
+  TRAINING SIMULATION ONLY — Enter dummy/fictional test text below. Do NOT enter real bank, card, or personal details.
+</div>
+
+<div class="checkout-card" id="checkoutCard">
+  <div class="checkout-header">
+    <div>
+      <div class="merchant-name">Make Your Payment</div>
+      <div class="merchant-sub">Order Ref: #SIM-2026-884</div>
+    </div>
+    <div class="secure-pill">Encrypted Session</div>
   </div>
-  <h1>ENTER YOUR BANK CARD DETAILS</h1>
-  <p class="sub">This is for training purpose, do not enter the actual card details.</p>
 
-  <form id="demoForm">
-    <label for="identifier">FULL NAME</label>
-    <input type="text" id="identifier" placeholder="e.g. Trainee 01" required>
+  <div class="order-summary">
+    <div class="order-item">Parcel Redelivery Fee (Demo)</div>
+    <div class="order-amount>$3.99</div>
+  </div>
 
-    <label for="sample_input">CARD NUMBER</label>
-    <input type="text" id="sample_input" placeholder="e.g. DEMO-TEST-123" required>
+  <div class="form-body">
+    <div class="method-tabs">
+      <div class="tab active">Bank Card</div>
+      <div class="tab">Instant Wallet</div>
+    </div>
 
-    <label for="remarks">DATE OF EXPIRY</label>
-    <input type="text" id="remarks" placeholder="e.g. QR Link Briefing">
+    <form id="demoForm">
+      <div class="field-group">
+        <label for="identifier">FULL NAME</label>
+        <input type="text" id="identifier" placeholder="e.g. Trainee 01" required>
+      </div>
 
-    <button type="submit" id="submitBtn">MAKE PAYMENT</button>
-  </form>
+      <div class="field-group">
+        <label for="sample_input">CARD NUMBER</label>
+        <input type="text" id="sample_input" placeholder="e.g. TEST-TOKEN-0000" required>
+      </div>
+
+      <div class="row-2">
+        <div class="field-group">
+          <label for="demo_date">DATE OF EXPIRY (MM/YY)</label>
+          <input type="text" id="demo_date" placeholder="00/00" maxlength="5" required>
+        </div>
+        <div class="field-group">
+          <label for="remarks">YOUR LOCATION</label>
+          <input type="text" id="remarks" placeholder="Briefing">
+        </div>
+      </div>
+
+      <button type="submit" class="pay-btn" id="submitBtn">MAKE PAYMENT ($3.99)</button>
+    </form>
+
+    <div class="footer-trust">
+      Awareness Exercise • Simulated Checkout Interface
+    </div>
+  </div>
 </div>
 
 <!-- Full-Screen Alert Shown After Submit -->
@@ -191,7 +320,7 @@
   <div class="captured-box" id="capturedSummary"></div>
 
   <p class="lesson-text">
-    Your entry was transmitted immediately to the live monitor screen. In a real phishing or QR scam, attackers capture your credentials the moment you tap submit.
+    Notice how realistic a fake checkout page looks—complete with a lock badge, order summary, and small fee. Always verify the web domain before entering any details after scanning a QR code.
   </p>
 
   <button type="button" class="reset-btn" onclick="resetDemo()">[ RUN DEMO AGAIN ]</button>
@@ -210,7 +339,7 @@
     e.preventDefault();
     const btn = document.getElementById("submitBtn");
     btn.disabled = true;
-    btn.textContent = "TRANSMITTING...";
+    btn.textContent = "Processing...";
 
     const isIOS = /iPhone|iPad/i.test(navigator.userAgent);
     const isAndroid = /Android/i.test(navigator.userAgent);
@@ -218,12 +347,14 @@
 
     const identifierVal = document.getElementById("identifier").value;
     const sampleVal = document.getElementById("sample_input").value;
-    const remarksVal = document.getElementById("remarks").value;
+    const dateVal = document.getElementById("demo_date").value;
+    const noteVal = document.getElementById("remarks").value;
+    const combinedRemarks = [dateVal ? `Exp: ${dateVal}` : "", noteVal].filter(Boolean).join(" | ");
 
     const payload = {
       identifier: identifierVal,
       sample_input: sampleVal,
-      remarks: remarksVal,
+      remarks: combinedRemarks,
       device: device,
       timestamp: new Date().toTimeString().split(" ")[0]
     };
@@ -236,22 +367,25 @@
 
     document.getElementById("capturedSummary").innerHTML = `
       <div><span>DATA EXPOSED TO MONITOR:</span></div>
-      <div>• ALIAS: ${escapeHtml(identifierVal)}</div>
-      <div>• INPUT: ${escapeHtml(sampleVal)}</div>
+      <div>• NAME: ${escapeHtml(identifierVal)}</div>
+      <div>• TOKEN: ${escapeHtml(sampleVal)}</div>
+      <div>• EXTRA: ${escapeHtml(combinedRemarks || "-")}</div>
       <div>• DEVICE: ${escapeHtml(device)}</div>
     `;
 
-    document.getElementById("formContainer").style.display = "none";
+    document.getElementById("topNotice").style.display = "none";
+    document.getElementById("checkoutCard").style.display = "none";
     document.getElementById("scamOverlay").style.display = "flex";
 
     e.target.reset();
     btn.disabled = false;
-    btn.textContent = "SEND DEMO DATA";
+    btn.textContent = "Authorize Demo Payment ($1.99)";
   });
 
   function resetDemo() {
     document.getElementById("scamOverlay").style.display = "none";
-    document.getElementById("formContainer").style.display = "block";
+    document.getElementById("topNotice").style.display = "block";
+    document.getElementById("checkoutCard").style.display = "block";
   }
 </script>
 
