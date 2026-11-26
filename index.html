@@ -41,7 +41,7 @@
     font-weight: bold;
     letter-spacing: 2px;
     color: var(--red);
-    font-size: 1.1rem;
+    font-size: 1.05rem;
   }
   .pulse-dot {
     width: 12px;
@@ -177,14 +177,14 @@
 <header>
   <div class="status-badge">
     <div class="pulse-dot"></div>
-    <span>ALERT LEVEL: CRITICAL // LIVE SIMULATION MONITOR</span>
+    <span>ALERT LEVEL: CRITICAL // AWARENESS TRAINING MONITOR</span>
   </div>
   <button class="clear-btn" onclick="clearFeed()">[ PURGE LOGS ]</button>
 </header>
 
 <div class="ticker-wrap">
   <div class="ticker-move" id="tickerText">
-    [!] SYSTEM LISTENING FOR INCOMING MOBILE PAYLOADS — SCAN QR CODE TO TEST DATA TRANSMISSION [!]
+    [!] TRAINING SIMULATION ACTIVE — SCAN QR CODE TO SUBMIT SAMPLE DEMO DATA — DO NOT ENTER REAL PERSONAL OR SENSITIVE INFORMATION [!]
   </div>
 </div>
 
@@ -192,25 +192,24 @@
   <section class="panel qr-panel">
     <h2>[ 01 ] TARGET UPLINK</h2>
     <p style="font-size: 0.85rem; color: var(--muted); line-height: 1.5;">
-      Scan with your mobile device camera to open the demo submission page.
+      Scan with your mobile camera to open the awareness demo page.
     </p>
     <div class="qr-box" id="qrcode"></div>
     <div class="url-text" id="mobileUrl">Generating link...</div>
   </section>
 
   <section class="panel">
-    <h2>[ 02 ] INTERCEPTED DATA STREAM (<span id="count">0</span>)</h2>
+    <h2>[ 02 ] LIVE TRANSMITTED DEMO DATA (<span id="count">0</span>)</h2>
     <div class="feed-list" id="feedList">
-      <div class="empty-state">AWAITING INCOMING TRANSMISSION FROM MOBILE DEVICE...</div>
+      <div class="empty-state">AWAITING INCOMING DEMO SUBMISSION FROM MOBILE DEVICE...</div>
     </div>
   </section>
 </main>
 
 <script>
-  // PASTE YOUR FIREBASE REALTIME DATABASE URL BELOW (NO TRAILING SLASH)
-  const DB_URL = https://console.firebase.google.com/project/cyber-awareness-demo/database/cyber-awareness-demo-default-rtdb/data/~2F;
+  const DB_URL = "https://cyber-awareness-demo-default-rtdb.asia-southeast1.firebasedatabase.app";
+  let lastSnapshot = "";
 
-  // Automatically build mobile.html link from current GitHub Pages URL
   const mobileLink = new URL("mobile.html", window.location.href).href;
   document.getElementById("mobileUrl").textContent = mobileLink;
   new QRCode(document.getElementById("qrcode"), {
@@ -240,13 +239,13 @@
     const ticker = document.getElementById("tickerText");
 
     if (items.length === 0) {
-      container.innerHTML = '<div class="empty-state">AWAITING INCOMING TRANSMISSION FROM MOBILE DEVICE...</div>';
-      ticker.textContent = '[!] SYSTEM LISTENING FOR INCOMING MOBILE PAYLOADS — SCAN QR CODE TO TEST DATA TRANSMISSION [!]';
+      container.innerHTML = '<div class="empty-state">AWAITING INCOMING DEMO SUBMISSION FROM MOBILE DEVICE...</div>';
+      ticker.textContent = '[!] TRAINING SIMULATION ACTIVE — SCAN QR CODE TO SUBMIT SAMPLE DEMO DATA — DO NOT ENTER REAL PERSONAL OR SENSITIVE INFORMATION [!]';
       return;
     }
 
     ticker.textContent = items.map(item =>
-      `[CAPTURED @ ${item.timestamp}] USER: ${escapeHtml(item.identifier)} | PAYLOAD: ${escapeHtml(item.secret_input)} | NOTE: ${escapeHtml(item.remarks || 'N/A')}`
+      `[DEMO @ ${item.timestamp}] ALIAS: ${escapeHtml(item.identifier)} | SAMPLE INPUT: ${escapeHtml(item.sample_input)} | NOTE: ${escapeHtml(item.remarks || 'N/A')}`
     ).join('   ///   ');
 
     container.innerHTML = items.map(item => `
@@ -257,15 +256,15 @@
         </div>
         <div class="entry-grid">
           <div>
-            <div class="field-label">Identifier / Name</div>
+            <div class="field-label">Alias / Name</div>
             <div class="field-value">${escapeHtml(item.identifier)}</div>
           </div>
           <div>
-            <div class="field-label">Entered Demo Data</div>
-            <div class="field-value" style="color: var(--red);">${escapeHtml(item.secret_input)}</div>
+            <div class="field-label">Sample Demo Input</div>
+            <div class="field-value" style="color: var(--red);">${escapeHtml(item.sample_input)}</div>
           </div>
           <div>
-            <div class="field-label">Department / Note</div>
+            <div class="field-label">Remarks / Scenario</div>
             <div class="field-value">${escapeHtml(item.remarks || '-')}</div>
           </div>
         </div>
