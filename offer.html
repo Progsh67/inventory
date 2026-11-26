@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flash Clearance Offer — Training Simulation</title>
+<style>
+  :root {
+    --bg: #f3f5f8;
+    --card: #ffffff;
+    --primary: #1a56db;
+    --primary-hover: #1e429f;
+    --accent: #dc2626;
+    --text: #111827;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+  }
+
+  .sim-notice {
+    width: 100%;
+    max-width: 440px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 14px;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  .offer-card {
+    width: 100%;
+    max-width: 440px;
+    background: var(--card);
+    border-radius: 14px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.07);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .top-banner {
+    background: var(--accent);
+    color: #fff;
+    text-align: center;
+    padding: 9px 14px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+  }
+
+  .product-img-wrap {
+    background: #f9fafb;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .product-img-wrap img {
+    max-width: 240px;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    object-fit: contain;
+  }
+
+  .offer-body {
+    padding: 20px;
+  }
+  .badge-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 8px;
+  }
+  .stock-pill {
+    background: #fef2f2;
+    color: var(--accent);
+    border: 1px solid #fecaca;
+    font-size: 0.74rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+  .timer-pill {
+    background: #eff6ff;
+    color: var(--primary);
+    border: 1px solid #bfdbfe;
+    font-size: 0.74rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+
+  h1 {
+    font-size: 1.25rem;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  .desc {
+    font-size: 0.86rem;
+    color: var(--muted);
+    line-height: 1.45;
+    margin-bottom: 16px;
+  }
+
+  .price-box {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 18px;
+    padding: 12px 14px;
+    background: #f8fafc;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  .sale-price {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--accent);
+  }
+  .orig-price {
+    font-size: 0.95rem;
+    color: var(--muted);
+    text-decoration: line-through;
+  }
+  .save-tag {
+    margin-left: auto;
+    background: #dcfce7;
+    color: #166534;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+
+  .buy-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    text-decoration: none;
+    background: var(--primary);
+    color: #fff;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    transition: background 0.15s;
+  }
+  .buy-btn:hover {
+    background: var(--primary-hover);
+  }
+
+  .fine-print {
+    margin-top: 12px;
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.4;
+  }
+</style>
+</head>
+<body>
+
+<div class="sim-notice">
+  TRAINING SIMULATION ONLY — Simulated promotional offer page for cyber/scam awareness briefing.
+</div>
+
+<div class="offer-card">
+  <div class="top-banner">Limited-Time Flash Clearance • Demo Offer</div>
+
+  <div class="product-img-wrap">
+    <!-- Upload jbl-speaker.jpg to the repo root or set a direct image URL -->
+    <img src="jbl-speaker.jpg" alt="JBL Portable Bluetooth Speaker">
+  </div>
+
+  <div class="offer-body">
+    <div class="badge-row">
+      <span class="stock-pill">Only 4 left in stock</span>
+      <span class="timer-pill" id="countdown">Expires in 14:59</span>
+    </div>
+
+    <h1>JBL Portable Bluetooth Speaker — Warehouse Clearance</h1>
+    <p class="desc">
+      Waterproof portable wireless speaker with bold sound and multi-hour battery life. Limited promotional batch for selected recipients.
+    </p>
+
+    <div class="price-box">
+      <span class="sale-price">$3.90</span>
+      <span class="orig-price">$169.00</span>
+      <span class="save-tag">97% OFF</span>
+    </div>
+
+    <a class="buy-btn" href="https://progsh67.github.io/inventory/mobile.html">Buy Now</a>
+
+    <div class="fine-print">
+      Training demo: clicking Buy Now opens https://progsh67.github.io/inventory/mobile.html.
+    </div>
+  </div>
+</div>
+
+<script>
+  let secondsLeft = 15 * 60;
+  const timerEl = document.getElementById("countdown");
+
+  setInterval(() => {
+    if (secondsLeft > 0) secondsLeft--;
+    const mins = String(Math.floor(secondsLeft / 60)).padStart(2, "0");
+    const secs = String(secondsLeft % 60).padStart(2, "0");
+    timerEl.textContent = `Expires in ${mins}:${secs}`;
+  }, 1000);
+</script>
+
+</body>
+</html>
