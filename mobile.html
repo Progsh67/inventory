@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AWARENESS TRAINING DEMO FOR PAYMENT DETAIL CAPTURE</title>
+<title>AWARENESS TRAINING DEMO</title>
 <style>
   :root {
     --bg: #08080a;
@@ -78,64 +78,152 @@
     letter-spacing: 1.5px;
     cursor: pointer;
   }
-  .success-msg {
+
+  /* Full-Screen Scammed Alert Overlay */
+  .scam-overlay {
     display: none;
-    margin-top: 18px;
-    padding: 14px;
-    border: 1px solid var(--red);
-    background: rgba(255, 30, 56, 0.12);
-    color: #fff;
-    font-size: 0.85rem;
+    position: fixed;
+    inset: 0;
+    background: #090204;
+    z-index: 9999;
+    padding: 24px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
+    border: 6px solid var(--red);
+    animation: flashBorder 1s infinite alternate;
+  }
+  @keyframes flashBorder {
+    from { box-shadow: inset 0 0 25px rgba(255, 30, 56, 0.35); border-color: #ff1e38; }
+    to   { box-shadow: inset 0 0 70px rgba(255, 30, 56, 0.85); border-color: #ff6b7d; }
+  }
+  .alert-icon {
+    font-size: 3.5rem;
+    color: var(--red);
+    font-weight: bold;
+    margin-bottom: 10px;
+    animation: blink 0.8s infinite;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.25; }
+  }
+  .scam-title {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: var(--red);
+    letter-spacing: 2px;
+    line-height: 1.15;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+  }
+  .sim-tag {
+    background: var(--red);
+    color: #000;
+    font-weight: bold;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    letter-spacing: 1.5px;
+    margin-bottom: 20px;
+  }
+  .captured-box {
+    width: 100%;
+    max-width: 400px;
+    background: #14080b;
+    border: 1px solid var(--red);
+    padding: 16px;
+    text-align: left;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+  .captured-box span {
+    color: var(--red);
+    font-weight: bold;
+  }
+  .lesson-text {
+    max-width: 400px;
+    font-size: 0.88rem;
+    color: #d4d4dc;
     line-height: 1.5;
+    margin-bottom: 24px;
+  }
+  .reset-btn {
+    max-width: 260px;
+    background: transparent;
+    border: 1px solid var(--red);
+    color: var(--red);
+    padding: 10px 16px;
+    font-size: 0.85rem;
   }
 </style>
 </head>
 <body>
 
-<div class="container">
+<div class="container" id="formContainer">
   <div class="warning-banner">
     [!] TRAINING PURPOSE ONLY — DO NOT KEY IN ACTUAL PERSONAL OR REAL DATA [!]
   </div>
-  <h1>AWARENESS DEMO INPUT FOR PAYMENT DETAIL CAPTURE</h1>
-  <p class="sub">Enter dummy/sample text only to see how submitted form data appears on the live monitor.</p>
+  <h1>AWARENESS DEMO INPUT</h1>
+  <p class="sub">Enter dummy/sample text only to see how submitted form data is captured in real time.</p>
 
   <form id="demoForm">
-    <label for="identifier">FULL NAME</label>
+    <label for="identifier">Alias / Demo Name</label>
     <input type="text" id="identifier" placeholder="e.g. Trainee 01" required>
 
-    <label for="sample_input">CARD NUMBER</label>
+    <label for="sample_input">Sample Text / Dummy Code</label>
     <input type="text" id="sample_input" placeholder="e.g. DEMO-TEST-123" required>
 
-    <label for="remarks">DATE OF EXPIRY(Optional)</label>
+    <label for="remarks">Scenario Note (Optional)</label>
     <input type="text" id="remarks" placeholder="e.g. QR Link Briefing">
 
-    <button type="submit" id="submitBtn">MAKE PAYMENT</button>
+    <button type="submit" id="submitBtn">SEND DEMO DATA</button>
   </form>
+</div>
 
-  <div class="success-msg" id="successBox">
-    <strong style="color: var(--red);">[!] PAYMENT MADE [!]</strong><br>
-    Check the main monitor screen to view your sample entry in the live feed and ticker.
-  </div>
+<!-- Full-Screen Alert Shown After Submit -->
+<div class="scam-overlay" id="scamOverlay">
+  <div class="alert-icon">[ ! ]</div>
+  <div class="scam-title">YOU HAVE BEEN SCAMMED!</div>
+  <div class="sim-tag">AWARENESS SIMULATION</div>
+
+  <div class="captured-box" id="capturedSummary"></div>
+
+  <p class="lesson-text">
+    Your entry was transmitted immediately to the live monitor screen. In a real phishing or QR scam, attackers capture your credentials the moment you tap submit.
+  </p>
+
+  <button type="button" class="reset-btn" onclick="resetDemo()">[ RUN DEMO AGAIN ]</button>
 </div>
 
 <script>
   const DB_URL = "https://cyber-awareness-demo-default-rtdb.asia-southeast1.firebasedatabase.app";
 
+  function escapeHtml(str) {
+    return String(str || '').replace(/[&<>"']/g, m => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[m]));
+  }
+
   document.getElementById("demoForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const btn = document.getElementById("submitBtn");
     btn.disabled = true;
-    btn.textContent = "SENDING...";
+    btn.textContent = "TRANSMITTING...";
 
     const isIOS = /iPhone|iPad/i.test(navigator.userAgent);
     const isAndroid = /Android/i.test(navigator.userAgent);
     const device = isIOS ? "iOS Mobile" : isAndroid ? "Android Mobile" : "Web Browser";
 
+    const identifierVal = document.getElementById("identifier").value;
+    const sampleVal = document.getElementById("sample_input").value;
+    const remarksVal = document.getElementById("remarks").value;
+
     const payload = {
-      identifier: document.getElementById("identifier").value,
-      sample_input: document.getElementById("sample_input").value,
-      remarks: document.getElementById("remarks").value,
+      identifier: identifierVal,
+      sample_input: sampleVal,
+      remarks: remarksVal,
       device: device,
       timestamp: new Date().toTimeString().split(" ")[0]
     };
@@ -146,11 +234,25 @@
       body: JSON.stringify(payload)
     });
 
-    document.getElementById("successBox").style.display = "block";
+    document.getElementById("capturedSummary").innerHTML = `
+      <div><span>DATA EXPOSED TO MONITOR:</span></div>
+      <div>• ALIAS: ${escapeHtml(identifierVal)}</div>
+      <div>• INPUT: ${escapeHtml(sampleVal)}</div>
+      <div>• DEVICE: ${escapeHtml(device)}</div>
+    `;
+
+    document.getElementById("formContainer").style.display = "none";
+    document.getElementById("scamOverlay").style.display = "flex";
+
     e.target.reset();
     btn.disabled = false;
     btn.textContent = "SEND DEMO DATA";
   });
+
+  function resetDemo() {
+    document.getElementById("scamOverlay").style.display = "none";
+    document.getElementById("formContainer").style.display = "block";
+  }
 </script>
 
 </body>
