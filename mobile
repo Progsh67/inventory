@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SECURITY AWARENESS DEMO</title>
+<title>AWARENESS TRAINING DEMO</title>
 <style>
   :root {
     --bg: #08080a;
@@ -36,12 +36,13 @@
     background: rgba(255, 30, 56, 0.15);
     border: 1px solid var(--red);
     color: var(--red);
-    padding: 10px;
+    padding: 12px;
     font-size: 0.8rem;
     font-weight: bold;
     text-align: center;
     margin-bottom: 20px;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
+    line-height: 1.45;
   }
   h1 { font-size: 1.2rem; margin-bottom: 8px; letter-spacing: 1px; }
   p.sub { font-size: 0.82rem; color: #9a9aa6; margin-bottom: 22px; line-height: 1.4; }
@@ -93,38 +94,39 @@
 <body>
 
 <div class="container">
-  <div class="warning-banner">[!] AWARENESS SIMULATION DEMO [!]</div>
-  <h1>DEVICE UPLINK TEST</h1>
-  <p class="sub">Enter dummy test details below (do not enter real passwords) to see live transmission on the main screen.</p>
+  <div class="warning-banner">
+    [!] TRAINING PURPOSE ONLY — DO NOT KEY IN ACTUAL PERSONAL OR REAL DATA [!]
+  </div>
+  <h1>AWARENESS DEMO INPUT</h1>
+  <p class="sub">Enter dummy/sample text only to see how submitted form data appears on the live monitor.</p>
 
   <form id="demoForm">
-    <label for="identifier">Name or Alias</label>
-    <input type="text" id="identifier" placeholder="e.g. Demo User 01" required>
+    <label for="identifier">Alias / Demo Name</label>
+    <input type="text" id="identifier" placeholder="e.g. Trainee 01" required>
 
-    <label for="secret_input">Test Code / Sample Input</label>
-    <input type="text" id="secret_input" placeholder="e.g. SampleCode99" required>
+    <label for="sample_input">Sample Text / Dummy Code</label>
+    <input type="text" id="sample_input" placeholder="e.g. DEMO-TEST-123" required>
 
-    <label for="remarks">Note (Optional)</label>
-    <input type="text" id="remarks" placeholder="e.g. Briefing Test">
+    <label for="remarks">Scenario Note (Optional)</label>
+    <input type="text" id="remarks" placeholder="e.g. QR Link Briefing">
 
-    <button type="submit" id="submitBtn">TRANSMIT PAYLOAD</button>
+    <button type="submit" id="submitBtn">SEND DEMO DATA</button>
   </form>
 
   <div class="success-msg" id="successBox">
-    <strong style="color: var(--red);">[!] TRANSMISSION COMPLETE [!]</strong><br>
-    Check the main monitor screen — your entry is now scrolling live.
+    <strong style="color: var(--red);">[!] DEMO ENTRY SENT [!]</strong><br>
+    Check the main monitor screen to view your sample entry in the live feed and ticker.
   </div>
 </div>
 
 <script>
-  // PASTE THE SAME FIREBASE REALTIME DATABASE URL HERE
-  const DB_URL = "https://console.firebase.google.com/project/cyber-awareness-demo/database/cyber-awareness-demo-default-rtdb/data/~2F";
+  const DB_URL = "https://cyber-awareness-demo-default-rtdb.asia-southeast1.firebasedatabase.app";
 
   document.getElementById("demoForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const btn = document.getElementById("submitBtn");
     btn.disabled = true;
-    btn.textContent = "TRANSMITTING...";
+    btn.textContent = "SENDING...";
 
     const isIOS = /iPhone|iPad/i.test(navigator.userAgent);
     const isAndroid = /Android/i.test(navigator.userAgent);
@@ -132,7 +134,7 @@
 
     const payload = {
       identifier: document.getElementById("identifier").value,
-      secret_input: document.getElementById("secret_input").value,
+      sample_input: document.getElementById("sample_input").value,
       remarks: document.getElementById("remarks").value,
       device: device,
       timestamp: new Date().toTimeString().split(" ")[0]
@@ -147,7 +149,7 @@
     document.getElementById("successBox").style.display = "block";
     e.target.reset();
     btn.disabled = false;
-    btn.textContent = "TRANSMIT PAYLOAD";
+    btn.textContent = "SEND DEMO DATA";
   });
 </script>
 
