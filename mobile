@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SECURITY AWARENESS DEMO</title>
+<style>
+  :root {
+    --bg: #08080a;
+    --card: #120d0f;
+    --red: #ff1e38;
+    --border: rgba(255, 30, 56, 0.45);
+    --text: #f4f4f6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Courier New', Courier, monospace;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .container {
+    width: 100%;
+    max-width: 420px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--red);
+    padding: 24px;
+    box-shadow: 0 0 30px rgba(255, 30, 56, 0.2);
+  }
+  .warning-banner {
+    background: rgba(255, 30, 56, 0.15);
+    border: 1px solid var(--red);
+    color: var(--red);
+    padding: 10px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+  }
+  h1 { font-size: 1.2rem; margin-bottom: 8px; letter-spacing: 1px; }
+  p.sub { font-size: 0.82rem; color: #9a9aa6; margin-bottom: 22px; line-height: 1.4; }
+  label {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--red);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  input {
+    width: 100%;
+    background: #070709;
+    border: 1px solid var(--border);
+    color: #fff;
+    padding: 12px;
+    font-family: inherit;
+    font-size: 1rem;
+    margin-bottom: 18px;
+    outline: none;
+  }
+  input:focus { border-color: var(--red); box-shadow: 0 0 8px rgba(255, 30, 56, 0.4); }
+  button {
+    width: 100%;
+    background: var(--red);
+    color: #fff;
+    border: none;
+    padding: 14px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+  }
+  .success-msg {
+    display: none;
+    margin-top: 18px;
+    padding: 14px;
+    border: 1px solid var(--red);
+    background: rgba(255, 30, 56, 0.12);
+    color: #fff;
+    font-size: 0.85rem;
+    text-align: center;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="warning-banner">[!] AWARENESS SIMULATION DEMO [!]</div>
+  <h1>DEVICE UPLINK TEST</h1>
+  <p class="sub">Enter dummy test details below (do not enter real passwords) to see live transmission on the main screen.</p>
+
+  <form id="demoForm">
+    <label for="identifier">Name or Alias</label>
+    <input type="text" id="identifier" placeholder="e.g. Demo User 01" required>
+
+    <label for="secret_input">Test Code / Sample Input</label>
+    <input type="text" id="secret_input" placeholder="e.g. SampleCode99" required>
+
+    <label for="remarks">Note (Optional)</label>
+    <input type="text" id="remarks" placeholder="e.g. Briefing Test">
+
+    <button type="submit" id="submitBtn">TRANSMIT PAYLOAD</button>
+  </form>
+
+  <div class="success-msg" id="successBox">
+    <strong style="color: var(--red);">[!] TRANSMISSION COMPLETE [!]</strong><br>
+    Check the main monitor screen — your entry is now scrolling live.
+  </div>
+</div>
+
+<script>
+  // PASTE THE SAME FIREBASE REALTIME DATABASE URL HERE
+  const DB_URL = "https://YOUR-PROJECT-ID-default-rtdb.firebaseio.com";
+
+  document.getElementById("demoForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById("submitBtn");
+    btn.disabled = true;
+    btn.textContent = "TRANSMITTING...";
+
+    const isIOS = /iPhone|iPad/i.test(navigator.userAgent);
+    const isAndroid = /Android/i.test(navigator.userAgent);
+    const device = isIOS ? "iOS Mobile" : isAndroid ? "Android Mobile" : "Web Browser";
+
+    const payload = {
+      identifier: document.getElementById("identifier").value,
+      secret_input: document.getElementById("secret_input").value,
+      remarks: document.getElementById("remarks").value,
+      device: device,
+      timestamp: new Date().toTimeString().split(" ")[0]
+    };
+
+    await fetch(`${DB_URL}/entries.json`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    document.getElementById("successBox").style.display = "block";
+    e.target.reset();
+    btn.disabled = false;
+    btn.textContent = "TRANSMIT PAYLOAD";
+  });
+</script>
+
+</body>
+</html>
